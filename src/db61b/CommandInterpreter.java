@@ -222,19 +222,35 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a table definition, returning the specified
-     *  table. */
+     *  table.  */
     Table tableDefinition() {
         Table table;
         if (_input.nextIf("(")) {
-            // REPLACE WITH SOLUTION
-            table = null;
+        		//We are are a column name
+        		ArrayList<String> colNames = getColNames();
+            table = new Table(colNames);
         } else {
-            // REPLACE WITH SOLUTION
+        		//We are at a select clause
             table = null;
         }
         return table;
     }
-
+    	
+    /** Returns a list of column names from the current input. */
+    ArrayList<String> getColNames() {
+    		ArrayList<String> colNames = new ArrayList<String>();
+    		StringBuilder currentColumnName = new StringBuilder();
+    		while ( !_input.nextIf(")") ) {
+    			if ( _input.nextIf(" ") ) {
+    				_input.next(" ");
+    			} else if ( !_input.nextIf(",") ) {
+    				currentColumnName.append(_input.next());
+    			}
+    			colNames.add(currentColumnName.toString());
+    		}
+    		return colNames;
+    }
+    
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {

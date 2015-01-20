@@ -18,14 +18,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+
 import static db61b.Utils.*;
 
 /** A single table in a database.
- *  @author P. N. Hilfinger
+ *  @author Alan Ponte
  */
 class Table implements Iterable<Row> {
     /** A new Table whose columns are given by COLUMNTITLES, which may
-     *  not contain dupliace names. */
+     *  not contain duplicate names. */
     Table(String[] columnTitles) {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
@@ -35,7 +36,7 @@ class Table implements Iterable<Row> {
                 }
             }
         }
-        // FILL IN
+        this._colTitles = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
@@ -45,26 +46,30 @@ class Table implements Iterable<Row> {
 
     /** Return the number of columns in this table. */
     public int columns() {
-        return 0;  // REPLACE WITH SOLUTION
+       return this._colTitles.length;
     }
 
     /** Return the title of the Kth column.  Requires 0 <= K < columns(). */
     public String getTitle(int k) {
-        return null;  // REPLACE WITH SOLUTION
+        if ( !(k > 0 || k < columns()) ) {
+        		throw new DBException("Attempting to get column title K=" + k 
+        				+ " K must be such that 0 <= K < columns()");
+        }
+        return this._colTitles[k];
     }
 
     /** Return the number of the column whose title is TITLE, or -1 if
      *  there isn't one. */
     public int findColumn(String title) {
-        return -1;  // REPLACE WITH SOLUTION
+        return Arrays.asList(_colTitles).indexOf(title);
     }
 
     /** Return the number of Rows in this table. */
     public int size() {
-        return 0;  // REPLACE WITH SOLUTION
+        return _rows.size();
     }
 
-    /** Returns an iterator that returns my rows in an unspecfied order. */
+    /** Returns an iterator that returns my rows in an unspecified order. */
     @Override
     public Iterator<Row> iterator() {
         return _rows.iterator();
@@ -73,7 +78,13 @@ class Table implements Iterable<Row> {
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {
-        return false;   // REPLACE WITH SOLUTION
+        for (Row r : this._rows) {
+        		if (r.equals(row)) {
+        			return false;
+        		}
+        }
+        this._rows.add(row);
+        return true;
     }
 
     /** Read the contents of the file NAME.db, and return as a Table.
@@ -128,7 +139,16 @@ class Table implements Iterable<Row> {
 
     /** Print my contents on the standard output. */
     void print() {
-        // FILL IN
+    		System.out.println("The table:");
+    		// Print out the titles.
+    		for (int i = 0; i < _colTitles.length; i += 1) {
+    			System.out.print(_colTitles[i] + " | ");
+    		}
+    		System.out.println();
+        // Then print out each ROW. 
+        for (Row row : this._rows) {
+        		System.out.println(row.toString());
+        }
     }
 
     /** Return a new Table whose columns are COLUMNNAMES, selected from
@@ -162,5 +182,7 @@ class Table implements Iterable<Row> {
 
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
-    // FILL IN
+
+    /** The Column titles for THIS Table. */
+    private String[] _colTitles;
 }

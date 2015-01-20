@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** A single row of a database.
- *  @author
+ *  @author Alan Ponte
  */
 class Row {
     /** A Row whose column values are DATA.  The array DATA must not be altered
@@ -45,17 +45,41 @@ class Row {
 
     /** Return my number of columns. */
     int size() {
-        return 0;  // REPLACE WITH SOLUTION
+    		return _data.length;
     }
 
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
-        return null; // REPLACE WITH SOLUTION
+    		if ( !(k < this.size() || k <= 0) ) {
+    			throw new DBException ("Index for K requres 0 <= K < size()");
+    		}
+        return this._data[k];
     }
 
+    
     @Override
+    /** For now, assume that OBJ is always another Row. */
     public boolean equals(Object obj) {
-        return false; // REPLACE WITH SOLUTION
+    		Row row2 = null;
+    		String[] row2Data = null;
+    		if ( !(obj instanceof Row) ) {
+    			throw new DBException("Obj is not a row");
+    		} else {
+    			row2 = (Row) obj;
+    			row2Data = (String[]) row2.getData();
+    		}
+    		
+    		// Some defensive programming.
+    		if (this._data.length != row2Data.length) {
+    			return false;
+    		}
+    		
+    		for (int i = 0; i < this._data.length; i += 1) {
+    			if (this._data[i] != row2Data[i]) {
+    				return false;
+    			}
+    		}
+    		return true;
     }
 
     /* NOTE: Whenever you override the .equals() method for a class, you
@@ -69,6 +93,22 @@ class Row {
     @Override
     public int hashCode() {
         return Arrays.hashCode(_data);
+    }
+    
+    @Override
+    public String toString() {
+    		StringBuilder str = new StringBuilder();
+    		for (int i = 0; i < _data.length; i += 1) {
+    			str.append(_data[i]);
+    			str.append(" | ");
+    			str.append("");
+    		}
+    		return str.toString();
+    }
+    
+    /** Returns the data of THIS Row. */
+    public Object getData() {
+    		return this._data;
     }
 
     /** Contents of this row. */
