@@ -7,7 +7,12 @@
 // solutions.
 package db61b;
 
-// FILL IN (WITH IMPORTS)?
+
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Collection;
+import java.util.ArrayList;
 
 /** A collection of Tables, indexed by name.
  *  @author Alan Ponte
@@ -15,23 +20,40 @@ package db61b;
 class Database {
     /** An empty database. */
     public Database() {
-        // FILL IN
+        _tables = new Hashtable<String, Table>();
     }
 
     /** Return the Table whose name is NAME stored in this database, or null
      *  if there is no such table. */
     public Table get(String name) {
-        return null;             // REPLACE WITH SOLUTION
+    		if ( hasTable(name) ) {
+    			return null;
+    		}
+    		return _tables.get(name);
     }
-
+    	
+    /** Returns True iff NAME is the name of a 
+     *  table in THIS Database. */
+    public Boolean hasTable(String name) {
+		ArrayList<String> tableNames = Collections.list(_tables.keys());
+		for (int i = 0; i < tableNames.size(); i += 1) {
+			if (tableNames.get(i).equals(name)) {
+				return true;
+			}
+		}
+		return false;
+    }
+    
     /** Set or replace the table named NAME in THIS to TABLE.  TABLE and
      *  NAME must not be null, and NAME must be a valid name for a table. */
     public void put(String name, Table table) {
         if (name == null || table == null) {
             throw new IllegalArgumentException("null argument");
         }
-        // FILL IN
+        _tables.put(name, table);
     }
-
-    // FILL IN?
+    /** The collection of Tables in THIS Database.
+     *  Each table will be identified by its name. */
+    Hashtable<String, Table> _tables;
+    
 }
